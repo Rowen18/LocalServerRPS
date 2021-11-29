@@ -8,7 +8,28 @@ value = {"/rock": ("/scissors", "/lizard"),
          "/lizard": ("/paper", "/spock"),
          "/spock": ("/scissors", "/rock")}
 
+class stats:
+    wins = 0
+    losses = 0
+    ties = 0
+    def __init__(self, wins, losses, ties):
+        self.wins = 0
+        self.losses = 0
+        self.ties = 0
 
+    def stattrack(self):
+        print("<p>You have %s</p>" % self.wins, "<p> wins,%s</p> " % self.ties, "<p> tied games, and %s</p>" % self.losses, "<p> losses.%s</p>", "utf-8")
+    def incrementwins(self):
+        self.wins += 1
+        #self.stattrack()
+    def incrementlosses(self):
+        self.losses += 1
+        #self.stattrack()
+    def incrementties(self):
+        self.ties += 1
+        #self.stattrack()
+
+s1 = stats(0,0,0)
 
 compin = random.choice(["/rock", "/paper", "/scissors", "/lizard", "/spock"])
 
@@ -30,13 +51,26 @@ class MyServer(BaseHTTPRequestHandler):
         if self.path == compin:
             self.wfile.write(bytes("<p>You tied. The computer picked: %s</p>" % compin, "utf-8"))
             rand()
+            s1.incrementties()
+            self.wfile.write(bytes("<p>Wins: %s</p>" % s1.wins, "utf-8"))
+            self.wfile.write(bytes("<p>Ties: %s</p>" % s1.ties, "utf-8"))
+            self.wfile.write(bytes("<p>Losses: %s</p>" % s1.losses, "utf-8"))
         elif compin in value[self.path]:
             self.wfile.write(bytes("<p>You win! The computer picked %s</p>" % compin, "utf-8"))
             rand()
+            s1.incrementwins()
+            self.wfile.write(bytes("<p>Wins: %s</p>" % s1.wins, "utf-8"))
+            self.wfile.write(bytes("<p>Ties: %s</p>" % s1.ties, "utf-8"))
+            self.wfile.write(bytes("<p>Losses: %s</p>" % s1.losses, "utf-8"))
         else:
             self.wfile.write(bytes("<p>You lose. The computer picked %s</p>" % compin, "utf-8"))
+            rand()
+            s1.incrementlosses()
+            self.wfile.write(bytes("<p>Wins: %s</p>" % s1.wins, "utf-8"))
+            self.wfile.write(bytes("<p>Ties: %s</p>" % s1.ties, "utf-8"))
+            self.wfile.write(bytes("<p>Losses: %s</p>" % s1.losses, "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
-        rand()
+
 
 
 if __name__ == "__main__":
@@ -52,26 +86,7 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 
-class stats:
-    wins = 0
-    losses = 0
-    ties = 0
-    def __init__(self, wins, losses, ties):
-        self.wins = 0
-        self.losses = 0
-        self.ties = 0
 
-    def stattrack(self):
-        print("You have ", self.wins, " wins, ", self.ties, " tied games, and ", self.losses, " losses.")
-    def incrementwins(self):
-        self.wins += 1
-        self.stattrack()
-    def incrementlosses(self):
-        self.losses += 1
-        self.stattrack()
-    def incrementties(self):
-        self.ties += 1
-        self.stattrack()
 
 
 valid_input = False
