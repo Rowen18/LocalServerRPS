@@ -2,11 +2,11 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import random
 import time
 
-value = {"/rock": ("/scissors", "/lizard"),
-         "/paper": ("/rock", "/spock"),
-         "/scissors": ("/paper", "/lizard"),
-         "/lizard": ("/paper", "/spock"),
-         "/spock": ("/scissors", "/rock")}
+value = {"/?choice=rock": ("/?choice=scissors", "/?choice=lizard"),
+         "/?choice=paper": ("/?choice=rock", "/?choice=spock"),
+         "/?choice=scissors": ("/?choice=paper", "/?choice=lizard"),
+         "/?choice=lizard": ("/?choice=paper", "/?choice=spock"),
+         "/?choice=spock": ("/?choice=scissors", "/?choice=rock")}
 
 class stats:
     wins = 0
@@ -31,22 +31,37 @@ class stats:
 
 s1 = stats(0,0,0)
 
-compin = random.choice(["/rock", "/paper", "/scissors", "/lizard", "/spock"])
+compin = random.choice(["/?choice=rock", "/?choice=paper", "/?choice=scissors", "/?choice=lizard", "/?choice=spock"])
 
 def rand():
     global compin
-    compin = random.choice(["/rock", "/paper", "/scissors", "/lizard", "/spock"])
+    compin = random.choice(["/?choice=rock", "/?choice=paper", "/?choice=scissors", "/?choice=lizard", "/?choice=spock"])
+
+f = open("newAccount.txt", "w")
+f.write('''self.wfile.write(bytes("<p>Type a username.</p>", "utf-8"))
+        self.wfile.write(bytes("<textarea id=new_user name=new_user_name rows=1 cols=20></textarea>", "utf-8"))
+        self.wfile.write(bytes("<button type=submit>Done</button>", "utf-8"))''')
+f.close()
+
 
 hostName = "localhost"
 serverPort = 8080
 
 class MyServer(BaseHTTPRequestHandler):
+    def newAccount(self):
+        self.wfile.write(bytes("<p>Type a username.</p>", "utf-8"))
+        self.wfile.write(bytes("<textarea id=new_user name=new_user_name rows=1 cols=20></textarea>", "utf-8"))
+        self.wfile.write(bytes("<button type=submit>Done</button>", "utf-8"))
     def do_GET(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(bytes("<html><head><title>https://pythonbasics.org</title></head>", "utf-8"))
-        self.wfile.write(bytes("<p>Type your choice: %s</p>" % self.path, "utf-8"))
+        self.wfile.write(bytes("<html><head><title>Rock_Paper_Scissors_Lizard_Spock</title></head>", "utf-8"))
+        self.wfile.write(bytes("""<form method=get class=input><div class=input><lable for=choice>Type your choice:%s
+        </lable><input type=text name=choice id=choice></div><div class=input><input type=submit value=Submit>
+        </div></form>""" % self.path, "utf-8"))
+        #self.wfile.write(bytes("", "utf-8"))
+        #self.wfile.write(bytes("<button form=submit name=choice>Done</button>", "utf-8"))
         self.wfile.write(bytes("<body>", "utf-8"))
         if self.path == compin:
             self.wfile.write(bytes("<p>You tied. The computer picked: %s</p>" % compin, "utf-8"))
@@ -75,7 +90,7 @@ class MyServer(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
+    print("Server started http://%s:%s" % ("127.0.0.1", serverPort))
 
     try:
         webServer.serve_forever()
@@ -84,9 +99,6 @@ if __name__ == "__main__":
 
     webServer.server_close()
     print("Server stopped.")
-
-
-
 
 
 valid_input = False
