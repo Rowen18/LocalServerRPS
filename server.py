@@ -57,8 +57,8 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
         self.wfile.write(bytes("<html><head><title>Rock_Paper_Scissors_Lizard_Spock</title></head>", "utf-8"))
-        self.wfile.write(bytes("""<form method=get class=input><div class=input><lable for=choice>Type your choice:%s
-        </lable><input type=text name=choice id=choice></div><div class=input><input type=submit value=Submit>
+        self.wfile.write(bytes("""<form method=get class=input autocomplete=off><div class=input><lable for=choice>Type your choice:
+        </lable><input type=text name=choice id=choice %s></div><div class=input><input type=submit value=Submit>
         </div></form>""" % self.path, "utf-8"))
         #self.wfile.write(bytes("", "utf-8"))
         #self.wfile.write(bytes("<button form=submit name=choice>Done</button>", "utf-8"))
